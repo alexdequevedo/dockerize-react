@@ -21,9 +21,9 @@ gcloud auth configure-docker us-central1-docker.pkg.dev
 
 ```
 docker tag dockerized-react \
-us-central1-docker.pkg.dev/gcp-three-tier-ref-app/alex-temp/hello-app:1.0.0
+us-central1-docker.pkg.dev/<REPO_NAME>/alex-temp/hello-app:1.0.0
 ```
 
 ```
-docker push us-central1-docker.pkg.dev/gcp-three-tier-ref-app/alex-temp/hello-app:1.0.0
+docker push us-central1-docker.pkg.dev/<REPO_NAME>/alex-temp/hello-app:1.0.0
 ```
