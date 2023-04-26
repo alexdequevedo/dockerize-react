@@ -1,6 +1,12 @@
-# Dockerize React
+# Sample App
 
-Repo for the step by step tutorial of Dockerizing a React app: https://jsramblings.com/dockerizing-a-react-app/
+Sample Application to be deployed on Compute Engine
+
+## Opening SSH tunnel
+
+```
+gcloud compute  ssh --ssh-flag="-L 3000:localhost:3000"  --zone <ZONE> --project <PROJECT_ID> --tunnel-through-iap <INSTANCE_NAME>
+```
 
 ## Build the Docker image:
 
@@ -14,7 +20,7 @@ docker build . -t dockerized-react
 docker run -p 3000:80 -d dockerized-react
 ```
 
-## Send to Artifact Registry 
+## Send to Artifact Registry
 ```
 gcloud auth configure-docker us-central1-docker.pkg.dev
 ```
