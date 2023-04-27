@@ -2,34 +2,29 @@
 
 Sample Application to be deployed on Compute Engine
 
-## Opening SSH tunnel
+## User Permissions
 
-```
-gcloud compute  ssh --ssh-flag="-L 3000:localhost:3000"  --zone <ZONE> --project <PROJECT_ID> --tunnel-through-iap <INSTANCE_NAME>
-```
+The User / Service Account that is doing the deploy will need
+* `Compute Admin` - In the project where the VM will be deployed. For creating compute engine instance
+* `IAP-secured Tunnel User` - In the project where the VM will be deployed. For connecting to the compute engine instance
 
-## Build the Docker image:
+* `Compute Security Admin` - In the project with the host networking VPC. For creating firewall rule to allow ssh access
 
+## Deploy Infrastructure
+From the `infra` directory run
 ```
-docker build . -t dockerized-react
-```
+gcloud auth application-default login
 
-## Run the image:
+terraform -chdir=./compute init
+terraform -chdir=./compute apply
 
-```
-docker run -p 3000:80 -d dockerized-react
-```
-
-## Send to Artifact Registry
-```
-gcloud auth configure-docker us-central1-docker.pkg.dev
+terraform -chdir=./networking init
+terraform -chdir=./networking apply
 ```
 
-```
-docker tag dockerized-react \
-us-central1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/hello-app:1.0.0
-```
+## Viewing Application
 
+Click the `SSH` button on the compute engine instance to connect to the vm through ssh. Then run
 ```
-docker push us-central1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/hello-app:1.0.0
+curl http://localhost:3000
 ```

@@ -1,8 +1,3 @@
-variable "project_id" {
-  description = "Project ID of the GCP project where resources will be deployed"
-  type        = string
-}
-
 variable "host_networking_project" {
   description = "Project that contains the host network (VPC)"
   type        = string
@@ -24,9 +19,3 @@ variable "zone" {
   type        = string
   default     = "europe-west4-a"
 }
-
-variable "source_ranges" {
-  description = "IP Adress range to allow ssh to the compute engine instance"
-  type        = list(string)
-}
-

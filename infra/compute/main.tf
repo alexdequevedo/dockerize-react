@@ -1,10 +1,25 @@
-data "google_compute_subnetwork" "subnet" {
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "4.63.0"
+    }
+  }
+}
+
+provider "google" {
   project = var.project_id
+  region  = var.location
+  zone    = var.zone
+}
+data "google_compute_subnetwork" "subnet" {
+  project = var.host_networking_project
   name    = var.subnet_name
   region  = var.location
 }
 
 resource "google_compute_instance" "default" {
+  project      = var.project_id
   name         = "example-app"
   machine_type = "e2-micro"
   zone         = var.zone
@@ -16,14 +31,14 @@ resource "google_compute_instance" "default" {
     }
   }
 
-  # Download and start React Application
+  # Download and start React application
   metadata_startup_script = <<EOF
     #! /bin/bash
+    apt update
     apt -y install git
-    apt -y install npm
-    mkdir -p /home/sample-app
-    cd /home/sample-app
+    cd /home
     git clone https://github.com/alexdequevedo/sample-app.git
+    apt -y install npm
     cd sample-app/app
     npm i
     (npm run start&)
@@ -34,15 +49,4 @@ resource "google_compute_instance" "default" {
   }
 }
 
-resource "google_compute_firewall" "ssh" {
-  name = "allow-ssh"
-  allow {
-    ports    = ["22"]
-    protocol = "tcp"
-  }
-  direction     = "INGRESS"
-  network       = data.google_compute_subnetwork.subnet.id
-  priority      = 1000
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["ssh"]
-}
+
